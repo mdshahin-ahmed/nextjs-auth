@@ -4,7 +4,6 @@ import Image from "next/image";
 
 const DashboardPage = async () => {
   const session = await getServerSession(authOptions);
-  console.log(session);
 
   return (
     <div>
@@ -18,7 +17,10 @@ const DashboardPage = async () => {
           </h1>
           <Image
             className="mx-auto rounded-full mt-5"
-            src={session?.user?.image}
+            src={
+              session?.user?.image ||
+              "https://images.pexels.com/photos/19959664/pexels-photo-19959664/free-photo-of-portrait-of-cat-in-front-of-curtain-in-black-and-white.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+            }
             alt="user image"
             width={100}
             height={100}

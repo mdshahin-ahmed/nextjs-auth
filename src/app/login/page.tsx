@@ -1,10 +1,12 @@
 "use client";
+import { loginUser } from "@/utils/actions/loginUser";
 import { signIn } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 
-type FormValues = {
+export type FormValues = {
   email: string;
   password: string;
 };
@@ -16,8 +18,23 @@ const LoginPage = () => {
     formState: { errors },
   } = useForm<FormValues>();
 
+  const router = useRouter();
+
   const onSubmit = async (data: FormValues) => {
-    console.log(data);
+    // console.log(data);
+    try {
+      const res = await loginUser(data);
+
+      if (res.success) {
+        console.log(res);
+        alert(res.message);
+        localStorage.setItem("accessToken", res.accessToken);
+        router.push("/");
+      }
+    } catch (err: any) {
+      console.error(err.message);
+      throw new Error(err.message);
+    }
   };
 
   return (
@@ -81,7 +98,8 @@ const LoginPage = () => {
             <button
               onClick={() =>
                 signIn("google", {
-                  callbackUrl: "http://localhost:3000/dashboard",
+                  callbackUrl:
+                    "http://https://nextjs-auth-puce-one.vercel.app/dashboard",
                 })
               }
               className="btn btn-circle "
@@ -96,7 +114,8 @@ const LoginPage = () => {
             <button
               onClick={() =>
                 signIn("github", {
-                  callbackUrl: "http://localhost:3000/dashboard",
+                  callbackUrl:
+                    "https://nextjs-auth-puce-one.vercel.app/dashboard",
                 })
               }
               className="btn btn-circle"
